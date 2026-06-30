@@ -5,6 +5,7 @@ import com.mycompany.myapp.domain.User;
 import com.mycompany.myapp.repository.ChatMessageRepository;
 import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.security.SecurityUtils;
+import com.mycompany.myapp.service.dto.ChatMessageDTO;
 import com.mycompany.myapp.web.rest.vm.ChatRequestVM;
 import jakarta.validation.Valid;
 import java.time.Instant;
@@ -19,6 +20,7 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +46,23 @@ public class ChatResource {
         this.chatMessageRepository = chatMessageRepository;
         this.userRepository = userRepository;
         this.chatModel = chatModel;
+    }
+
+    /**
+     * {@code GET /api/chat/history} : get the current user's chat history.
+     *
+     * @return the list of chat messages ordered chronologically.
+     */
+    @GetMapping("/history")
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<ChatMessageDTO>> getHistory() {
+        User user = getCurrentUser();
+        List<ChatMessageDTO> history = chatMessageRepository
+            .findAllByUserIdOrderByTimestampAsc(user.getId())
+            .stream()
+            .map(ChatMessageDTO::fromEntity)
+            .toList();
+        return ResponseEntity.ok(history);
     }
 
     /**

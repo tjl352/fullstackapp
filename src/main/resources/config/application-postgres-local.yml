@@ -1,0 +1,22 @@
+# ===================================================================
+# PostgreSQL via locally installed Postgres app (no Docker).
+# Uses your existing Postgres login — no new user required.
+#
+# Defaults: user=postgres, database=postgres, no password.
+# Override to match your install (Postgres.app often uses your macOS username):
+#   export POSTGRES_USER=thomas
+#   export POSTGRES_PASSWORD=
+#   export POSTGRES_DB=postgres
+#
+# Start with:
+#   ./mvnw -Dspring-boot.run.profiles=dev-postgres-local
+# ===================================================================
+
+spring:
+  docker:
+    compose:
+      enabled: false
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:postgres}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:}

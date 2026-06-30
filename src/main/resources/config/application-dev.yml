@@ -38,6 +38,10 @@ spring:
     serialization:
       indent-output: true
   datasource:
+    # Default dev database: embedded H2 file store.
+    # Other options:
+    #   dev-postgres-docker  — PostgreSQL in Docker (auto-started)
+    #   dev-postgres-local   — your local Postgres app (no Docker)
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:h2:file:./target/h2db/db/fullstackapp;DB_CLOSE_DELAY=-1
     username: fullstackapp
@@ -68,7 +72,7 @@ spring:
       base-url: https://api.groq.com/openai
       chat:
         options:
-          model: llama3-8b-8192
+          model: llama-3.1-8b-instant
     model:
       chat: openai
       audio:

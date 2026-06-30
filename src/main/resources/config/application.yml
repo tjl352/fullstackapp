@@ -108,6 +108,16 @@ spring:
         - api-docs
         # Uncomment to activate TLS for the dev profile
         #- tls
+      dev-postgres-docker:
+        - dev
+        - api-docs
+        - postgres
+        - postgres-docker
+      dev-postgres-local:
+        - dev
+        - api-docs
+        - postgres
+        - postgres-local
   jmx:
     enabled: false
   data:

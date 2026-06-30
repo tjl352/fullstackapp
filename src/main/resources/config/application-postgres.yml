@@ -1,0 +1,18 @@
+# ===================================================================
+# Shared PostgreSQL settings (used by postgres-docker and postgres-local).
+# Override connection details with environment variables if needed:
+#   POSTGRES_HOST, POSTGRES_PORT, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD
+# ===================================================================
+
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:fullstackapp}
+    username: ${POSTGRES_USER:fullstackapp}
+    password: ${POSTGRES_PASSWORD:}
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+  h2:
+    console:
+      enabled: false

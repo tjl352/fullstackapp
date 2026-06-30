@@ -1,0 +1,13 @@
+# ===================================================================
+# PostgreSQL via Docker Compose (auto-starts container on app startup).
+#
+# Start with:
+#   ./mvnw -Dspring-boot.run.profiles=dev-postgres-docker
+# ===================================================================
+
+spring:
+  docker:
+    compose:
+      enabled: true
+      lifecycle-management: start-only
+      file: src/main/docker/postgresql.yml

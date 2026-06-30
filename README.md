@@ -41,6 +41,90 @@ auto-refreshes when files change on your hard drive.
 ./npmw start
 ```
 
+### Database options
+
+Development supports three database modes. Each mode uses a **separate database** — chat history and other data do not sync between them.
+
+| Mode | Profile | Command |
+|------|---------|---------|
+| **H2** (default, embedded file) | `dev` | `./mvnw` |
+| **PostgreSQL via Docker** | `dev-postgres-docker` | `./mvnw -Dspring-boot.run.profiles=dev-postgres-docker` |
+| **PostgreSQL local app** (Postgres.app, Homebrew, etc.) | `dev-postgres-local` | `./mvnw -Dspring-boot.run.profiles=dev-postgres-local` |
+
+#### H2 (default)
+
+Data is stored in `target/h2db/db/fullstackapp.mv.db`. Browse it with the H2 console at [http://localhost:8080/h2-console](http://localhost:8080/h2-console):
+
+- JDBC URL: `jdbc:h2:file:./target/h2db/db/fullstackapp`
+- Username: `fullstackapp`
+- Password: *(empty)*
+
+#### PostgreSQL via Docker Desktop (recommended for real persistence)
+
+1. Start **Docker Desktop** and wait until it is running.
+2. Start the backend:
+
+```
+./mvnw -Dspring-boot.run.profiles=dev-postgres-docker
+```
+
+Spring Boot auto-starts the Postgres container from [src/main/docker/postgresql.yml](src/main/docker/postgresql.yml) and connects to `localhost:5432`.
+
+Useful commands:
+
+```
+# Check the container is running
+docker ps
+
+# Inspect chat messages
+docker exec -it fullstackapp-postgresql-1 psql -U fullstackapp -d fullstackapp -c "SELECT * FROM chat_message;"
+
+# Stop Postgres when done
+docker compose -f src/main/docker/postgresql.yml down
+```
+
+The container name may differ — use the name shown by `docker ps`.
+
+#### PostgreSQL local app (no Docker)
+
+Uses your **existing** Postgres account — you do not need to run `CREATE USER`.
+
+Defaults to the `postgres` superuser and `postgres` database. Override to match your install (Postgres.app often uses your macOS username):
+
+```
+export POSTGRES_USER=your-existing-username
+export POSTGRES_PASSWORD=          # leave empty if none
+export POSTGRES_DB=postgres
+./mvnw -Dspring-boot.run.profiles=dev-postgres-local
+```
+
+Liquibase creates all app tables on first startup.
+
+#### Configuration files
+
+| File | Purpose |
+|------|---------|
+| [application-dev.yml](src/main/resources/config/application-dev.yml) | H2 datasource |
+| [application-postgres.yml](src/main/resources/config/application-postgres.yml) | Shared PostgreSQL connection settings |
+| [application-postgres-docker.yml](src/main/resources/config/application-postgres-docker.yml) | Enables Docker Compose |
+| [application-postgres-local.yml](src/main/resources/config/application-postgres-local.yml) | Disables Docker Compose |
+
+Liquibase creates all tables (including `chat_message`) on first connect to any PostgreSQL instance.
+
+### AI chat (Groq)
+
+The app includes an AI chatbot at `/chat` (sign in required). It uses [Groq](https://console.groq.com/) via Spring AI.
+
+Set your API key before starting the backend:
+
+```
+export GROQ_API_KEY=your-groq-api-key
+```
+
+Or copy [application-local.yml.example](src/main/resources/config/application-local.yml.example) to `src/main/resources/config/application-local.yml` and add your key there (this file is gitignored).
+
+Groq settings are in [application-dev.yml](src/main/resources/config/application-dev.yml) under `spring.ai`.
+
 Npm is also used to manage CSS and JavaScript dependencies used in this application. You can upgrade dependencies by
 specifying a newer version in [package.json](package.json). You can also run `./npmw update` and `./npmw install` to manage dependencies.
 Add the `help` flag on any command to see how you can use it. For example, `./npmw help update`.
