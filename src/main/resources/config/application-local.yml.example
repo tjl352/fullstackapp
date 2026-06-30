@@ -1,0 +1,8 @@
+# Copy to application-local.yml and add your Groq API key.
+# Get a key at https://console.groq.com/keys
+spring:
+  ai:
+    openai:
+      api-key: gsk_your-groq-api-key-here
+    model:
+      chat: openai

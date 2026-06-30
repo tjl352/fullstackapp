@@ -21,6 +21,8 @@ logging:
     com.mycompany.myapp: DEBUG
 
 spring:
+  config:
+    import: optional:classpath:config/application-local.yml
   devtools:
     restart:
       enabled: true
@@ -59,6 +61,22 @@ spring:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
     cache: false
+  ai:
+    openai:
+      api-key: ${GROQ_API_KEY}
+      # Groq OpenAI-compatible API (Spring AI appends /v1/chat/completions to base-url)
+      base-url: https://api.groq.com/openai
+      chat:
+        options:
+          model: llama3-8b-8192
+    model:
+      chat: openai
+      audio:
+        speech: none
+        transcription: none
+      image: none
+      embedding: none
+      moderation: none
 
 server:
   port: 8080
