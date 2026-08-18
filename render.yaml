@@ -4,7 +4,7 @@ services:
   - type: web
     name: fullstackapp
     runtime: docker
-    plan: free
+    plan: starter
     dockerfilePath: ./Dockerfile
     healthCheckPath: /management/health
     envVars:
