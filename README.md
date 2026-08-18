@@ -2,6 +2,7 @@
 
 Spring Boot + React (JHipster). Login: `admin` / `admin`.
 
+https://fullstackapp-qwj8.onrender.com/
 ## Run locally
 
 ```bash
