@@ -175,6 +175,22 @@ spring:
   output:
     ansi:
       console-available: true
+  ai:
+    openai:
+      api-key: ${GROQ_API_KEY:}
+      # Groq OpenAI-compatible API (Spring AI appends /v1/chat/completions to base-url)
+      base-url: https://api.groq.com/openai
+      chat:
+        options:
+          model: openai/gpt-oss-20b
+    model:
+      chat: openai
+      audio:
+        speech: none
+        transcription: none
+      image: none
+      embedding: none
+      moderation: none
 
 server:
   servlet:

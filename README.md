@@ -189,6 +189,34 @@ Then navigate to [http://localhost:8080](http://localhost:8080) in your browser.
 
 Refer to [Using JHipster in production][] for more details.
 
+## Cloud deployment (free tier)
+
+Recommended stack: **Render** (Spring Boot + React JAR) + **Supabase** (PostgreSQL).
+
+1. Create a Supabase project. In **Project Settings → Database**, copy the **Session pooler** URI (port `5432`, not transaction mode on `6543`). Liquibase needs a session-mode connection.
+2. Convert it to JDBC and add SSL:
+
+   `jdbc:postgresql://aws-0-<region>.pooler.supabase.com:5432/postgres?sslmode=require`
+
+   Pooler username looks like `postgres.<project-ref>`.
+3. Generate a JWT secret: `openssl rand -base64 64`
+4. Push this repo to GitHub, then on [Render](https://render.com) create a **Web Service** from the repo (Docker). Free plan spins down after ~15 minutes of idle traffic.
+5. Set these environment variables on the service:
+
+| Variable | Example |
+|----------|---------|
+| `SPRING_PROFILES_ACTIVE` | `prod` |
+| `SPRING_DATASOURCE_URL` | JDBC URL from step 2 |
+| `SPRING_DATASOURCE_USERNAME` | `postgres.<project-ref>` |
+| `SPRING_DATASOURCE_PASSWORD` | Supabase database password |
+| `GROQ_API_KEY` | Groq API key |
+| `JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET` | output of `openssl rand -base64 64` |
+| `JHIPSTER_MAIL_BASE_URL` | `https://<your-service>.onrender.com` |
+
+Liquibase creates tables on first boot. If the free 512 MB instance runs out of memory, redeploy the same `Dockerfile` to **Google Cloud Run** with 1 GiB RAM.
+
+A `render.yaml` Blueprint is in the repo root if you prefer one-click service creation.
+
 ### Packaging as war
 
 To package your application as a war in order to deploy it to an application server, run:

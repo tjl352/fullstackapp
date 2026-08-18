@@ -1,0 +1,28 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+# After connecting the GitHub repo, set the secret env vars in the Render dashboard.
+services:
+  - type: web
+    name: fullstackapp
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /management/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: JAVA_OPTS
+        value: -XX:MaxRAMPercentage=70.0 -XX:+UseSerialGC -XX:+UseContainerSupport -Xss256k
+      - key: HIKARI_MAXIMUM_POOL_SIZE
+        value: '5'
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET
+        sync: false
+      - key: JHIPSTER_MAIL_BASE_URL
+        sync: false
