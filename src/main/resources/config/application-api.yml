@@ -1,0 +1,16 @@
+# ===================================================================
+# Profile: api  (Phase 1 learning — separate UI from backend)
+#
+# Activate together with dev or prod, e.g.:
+#   ./mvnw -Dspring-boot.run.profiles=dev,api
+#   SPRING_PROFILES_ACTIVE=prod,api
+#
+# Effect:
+#   - CORS comes from application-dev.yml / application-prod.yml
+#   - Static SPA is NOT served (see StaticResourcesWebConfiguration + WebConfigurer)
+#   - React should call this API via SERVER_API_URL (Step 3)
+# ===================================================================
+
+logging:
+  level:
+    com.mycompany.myapp.config: INFO

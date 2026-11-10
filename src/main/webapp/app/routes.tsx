@@ -33,6 +33,11 @@ const Chat = Loadable({
   loading: () => loading,
 });
 
+const Store = Loadable({
+  loader: () => import(/* webpackChunkName: "store" */ 'app/modules/store'),
+  loading: () => loading,
+});
+
 const AppRoutes = () => {
   return (
     <div className="view-routes">
@@ -61,6 +66,14 @@ const AppRoutes = () => {
           element={
             <PrivateRoute hasAnyAuthorities={[AUTHORITIES.ADMIN]}>
               <Admin />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="store/*"
+          element={
+            <PrivateRoute hasAnyAuthorities={[AUTHORITIES.ADMIN, AUTHORITIES.USER]}>
+              <Store />
             </PrivateRoute>
           }
         />

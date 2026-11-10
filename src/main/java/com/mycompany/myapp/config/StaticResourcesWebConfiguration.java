@@ -11,7 +11,9 @@ import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.config.JHipsterProperties;
 
 @Configuration
-@Profile({ JHipsterConstants.SPRING_PROFILE_PRODUCTION })
+// Phase 1 learning: serve the SPA from prod *unless* the "api" profile is active
+// (API-only process — UI is hosted separately).
+@Profile(JHipsterConstants.SPRING_PROFILE_PRODUCTION + " & !api")
 public class StaticResourcesWebConfiguration implements WebMvcConfigurer {
 
     protected static final String[] RESOURCE_LOCATIONS = { "classpath:/static/", "classpath:/static/content/", "classpath:/static/i18n/" };

@@ -91,6 +91,15 @@ server:
 # ===================================================================
 
 jhipster:
+  # Phase 1 learning: CORS must be on when the React UI is on another origin
+  # (e.g. localhost:9000 or a static host). Override in deploy with CORS_ALLOWED_ORIGINS.
+  cors:
+    allowed-origins: '${CORS_ALLOWED_ORIGINS:http://localhost:9000,https://localhost:9000,http://localhost:9060,https://localhost:9060}'
+    allowed-methods: '*'
+    allowed-headers: '*'
+    exposed-headers: 'Authorization,Link,X-Total-Count,X-${jhipster.clientApp.name}-alert,X-${jhipster.clientApp.name}-error,X-${jhipster.clientApp.name}-params'
+    allow-credentials: true
+    max-age: 1800
   http:
     cache: # Used by the CachingHttpHeadersFilter
       timeToLiveInDays: 1461

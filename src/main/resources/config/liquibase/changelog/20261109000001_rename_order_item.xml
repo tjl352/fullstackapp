@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20261109000001-1" author="fullstackapp">
+        <renameTable oldTableName="order_item" newTableName="ebook_order_item"/>
+        <sql>
+            ALTER TABLE ebook_order_item RENAME CONSTRAINT pk_order_item TO pk_ebook_order_item;
+            ALTER TABLE ebook_order_item RENAME CONSTRAINT ux_order_item_ebook_id TO ux_ebook_order_item_ebook_id;
+            ALTER TABLE ebook_order_item RENAME CONSTRAINT ck_order_item_quantity TO ck_ebook_order_item_quantity;
+            ALTER TABLE ebook_order_item RENAME CONSTRAINT fk_order_item_order_id TO fk_ebook_order_item_order_id;
+            ALTER TABLE ebook_order_item RENAME CONSTRAINT fk_order_item_ebook_id TO fk_ebook_order_item_ebook_id;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

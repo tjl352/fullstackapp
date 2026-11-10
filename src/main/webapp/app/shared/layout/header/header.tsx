@@ -6,7 +6,7 @@ import { Collapse, Nav, Navbar, NavbarToggler } from 'reactstrap';
 import LoadingBar from 'react-redux-loading-bar';
 
 import { AccountMenu, AdminMenu, EntitiesMenu } from '../menus';
-import { Brand, Chat, Home } from './header-components';
+import { Brand, Chat, Home, Store } from './header-components';
 
 export interface IHeaderProps {
   isAuthenticated: boolean;
@@ -41,6 +41,7 @@ const Header = (props: IHeaderProps) => {
           <Nav id="header-tabs" className="ms-auto" navbar>
             <Home />
             {props.isAuthenticated && <Chat />}
+            {props.isAuthenticated && <Store />}
             {props.isAuthenticated && <EntitiesMenu />}
             {props.isAuthenticated && props.isAdmin && (
               <AdminMenu showOpenAPI={props.isOpenAPIEnabled} showDatabase={!props.isInProduction} />

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20261109000000-1" author="fullstackapp">
+        <createTable tableName="ebook">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_ebook"/>
+            </column>
+            <column name="format" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)"/>
+            <column name="price" type="decimal(21,2)"/>
+            <column name="file_object_key" type="varchar(255)"/>
+        </createTable>
+        <sql>
+            ALTER TABLE ebook ADD CONSTRAINT ck_ebook_format CHECK (format IN ('PDF', 'WORD'));
+            ALTER TABLE ebook ADD CONSTRAINT ck_ebook_quantity CHECK (quantity = 1);
+        </sql>
+    </changeSet>
+
+    <changeSet id="20261109000000-2" author="fullstackapp">
+        <createTable tableName="ebook_order">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_ebook_order"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(20)"/>
+            <column name="placed_at" type="${datetimeType}"/>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="ebook_order"
+            baseColumnNames="user_id"
+            constraintName="fk_ebook_order_user_id"
+            referencedTableName="jhi_user"
+            referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="20261109000000-3" author="fullstackapp">
+        <createTable tableName="order_item">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_order_item"/>
+            </column>
+            <column name="order_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ebook_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit_price" type="decimal(21,2)"/>
+        </createTable>
+        <addUniqueConstraint
+            tableName="order_item"
+            columnNames="ebook_id"
+            constraintName="ux_order_item_ebook_id"/>
+        <addForeignKeyConstraint
+            baseTableName="order_item"
+            baseColumnNames="order_id"
+            constraintName="fk_order_item_order_id"
+            referencedTableName="ebook_order"
+            referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+            baseTableName="order_item"
+            baseColumnNames="ebook_id"
+            constraintName="fk_order_item_ebook_id"
+            referencedTableName="ebook"
+            referencedColumnNames="id"/>
+        <sql>
+            ALTER TABLE order_item ADD CONSTRAINT ck_order_item_quantity CHECK (quantity = 1);
+        </sql>
+    </changeSet>
+
+    <!-- Sample rows for local testing. Not loaded when Liquibase context is prod. -->
+    <changeSet id="20261109000000-4" author="fullstackapp" context="faker">
+        <insert tableName="ebook">
+            <column name="id" valueNumeric="101"/>
+            <column name="format" value="PDF"/>
+            <column name="quantity" valueNumeric="1"/>
+            <column name="title" value="North Sea Field Notes"/>
+            <column name="price" valueNumeric="12.00"/>
+            <column name="file_object_key" value="originals/north-sea.pdf"/>
+        </insert>
+        <insert tableName="ebook">
+            <column name="id" valueNumeric="102"/>
+            <column name="format" value="WORD"/>
+            <column name="quantity" valueNumeric="1"/>
+            <column name="title" value="Kitchen Ledger"/>
+        </insert>
+        <insert tableName="ebook">
+            <column name="id" valueNumeric="103"/>
+            <column name="format" value="PDF"/>
+            <column name="quantity" valueNumeric="1"/>
+            <column name="title" value="Single Pressing"/>
+            <column name="price" valueNumeric="40.00"/>
+            <column name="file_object_key" value="originals/single-pressing.pdf"/>
+        </insert>
+        <insert tableName="ebook">
+            <column name="id" valueNumeric="104"/>
+            <column name="format" value="WORD"/>
+            <column name="quantity" valueNumeric="1"/>
+            <column name="price" valueNumeric="8.50"/>
+            <column name="file_object_key" value="originals/margin-notes.docx"/>
+        </insert>
+        <insert tableName="ebook">
+            <column name="id" valueNumeric="105"/>
+            <column name="format" value="WORD"/>
+            <column name="quantity" valueNumeric="1"/>
+            <column name="title" value="Untitled Draft"/>
+        </insert>
+
+        <insert tableName="ebook_order">
+            <column name="id" valueNumeric="201"/>
+            <column name="user_id" valueNumeric="2"/>
+            <column name="status" value="PAID"/>
+            <column name="placed_at" valueDate="2026-06-01T15:00:00"/>
+        </insert>
+        <insert tableName="ebook_order">
+            <column name="id" valueNumeric="202"/>
+            <column name="user_id" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="order_item">
+            <column name="id" valueNumeric="301"/>
+            <column name="order_id" valueNumeric="201"/>
+            <column name="ebook_id" valueNumeric="103"/>
+            <column name="quantity" valueNumeric="1"/>
+            <column name="unit_price" valueNumeric="40.00"/>
+        </insert>
+        <insert tableName="order_item">
+            <column name="id" valueNumeric="302"/>
+            <column name="order_id" valueNumeric="201"/>
+            <column name="ebook_id" valueNumeric="104"/>
+            <column name="quantity" valueNumeric="1"/>
+            <column name="unit_price" valueNumeric="8.50"/>
+        </insert>
+        <insert tableName="order_item">
+            <column name="id" valueNumeric="303"/>
+            <column name="order_id" valueNumeric="202"/>
+            <column name="ebook_id" valueNumeric="105"/>
+            <column name="quantity" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

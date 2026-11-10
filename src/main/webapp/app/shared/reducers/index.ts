@@ -9,6 +9,7 @@ import password from 'app/modules/account/password/password.reducer';
 import settings from 'app/modules/account/settings/settings.reducer';
 import passwordReset from 'app/modules/account/password-reset/password-reset.reducer';
 import chat from 'app/modules/chat/chat.reducer';
+import store from 'app/modules/store/store.reducer';
 import entitiesReducers from 'app/entities/reducers';
 import applicationProfile from './application-profile';
 import authentication from './authentication';
@@ -25,6 +26,7 @@ const rootReducer: ReducersMapObject = {
   password,
   settings,
   chat,
+  store,
   loadingBar,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   ...entitiesReducers,

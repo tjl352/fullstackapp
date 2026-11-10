@@ -57,6 +57,11 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
      */
     @Override
     public void customize(WebServerFactory server) {
+        // Phase 1 learning: "api" profile = JSON API only; do not attach the React static root.
+        if (env.acceptsProfiles(Profiles.of("api"))) {
+            LOG.info("API-only profile active: not serving static UI assets from this process");
+            return;
+        }
         // When running in an IDE or with ./mvnw spring-boot:run, set location of the static web assets.
         setLocationForStaticAssets(server);
     }
